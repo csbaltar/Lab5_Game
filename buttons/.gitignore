@@ -1,0 +1,4 @@
+*.elf
+*.swp
+main
+Makefile
