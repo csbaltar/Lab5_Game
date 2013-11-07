@@ -3,6 +3,9 @@
 #include "buttons/button.h"
 #include "LCD/LCD.h"
 
+#define True = 0x1
+#define False = 0x0
+
 void init_timer();
 void init_buttons();
 
@@ -15,6 +18,9 @@ int main(void)
 	 LCDclear();
 
 	unsigned char player = initPlayer();
+
+	unsigned char direction = direction();
+
 	printPlayer(player);
 
 	init_timer();
@@ -40,7 +46,7 @@ int main(void)
 		 * wait for button press to begin new game (you can poll here)
 		 * wait for release before starting again
 		 */
-
+		isP1ButtonPressed(PIN1);
 
 	}
 
@@ -50,6 +56,39 @@ int main(void)
 //
 // YOUR TIMER A ISR GOES HERE
 //
+#pragma vector=PORT1_VECTOR
+__interrupt void Port_1_ISR(void)
+{
+    // do some stuff in response to an interrupt
+	P1IFG &= ~BIT1;
+	if (P1IFG & BIT1)
+	    {
+	        P1IFG &= ~BIT1;                            // clear flag
+	        movePlayer(player,UP);
+	        P1OUT ^= BIT6;                            // toggle LED 2
+	    }
+
+	if (P1IFG & BIT2)
+	    {
+	        P1IFG &= ~BIT2;                         // clear flag
+	        movePlayer(player,RIGHT);
+	        P1OUT ^= BIT0;                            // toggle LED 1
+	    }
+
+	if (P1IFG & BIT3)
+	    {
+	        P1IFG &= ~BIT3;                         // clear P1.3 interrupt flag
+	        movePlayer(player,LEFT);
+	        P1OUT ^= BIT0|BIT6;                     // toggle both LEDs
+	    }
+	if(P1IFG & BIT4)
+		{
+			P1IFG &= ~BIT4;                         // clear P1.3 interrupt flag
+			movePlayer(player, DOWN);
+			P1OUT ^= BIT0|BIT6;                     // toggle both LEDs
+		}
+}
+
 
 void init_timer()
 {
