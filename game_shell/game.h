@@ -20,10 +20,6 @@
 //
 unsigned char initPlayer();
 
-//
-// assigns directions based on button input
-//
-unsigned char direction();
 
 //
 // Prints the player marker (*) at the player location passed in.

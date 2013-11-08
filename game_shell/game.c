@@ -6,33 +6,15 @@
 #define True = 0x1
 #define False = 0x0
 
+char you[]="You";
+char won[]="Won!!";
+char game[]="Game";
+char over[]="Over!";
+char boom[]="boom";
+
 unsigned char initPlayer()
 {
 	return 0x80;
-}
-
-unsigned char direction()
-{
-	#define True = 0x1
-	#define False = 0x0
-
-	if (BIT1 =True)
-	{
-		direction = UP;
-	}
-	else if (BIT2=True)
-	{
-		direction = RIGHT;
-	}
-
-	else if(BIT3=True)
-	{
-		direction=LEFT;
-	}
-	else if (BIT4=True)
-	{
-		direction = DOWN;
-	}
 }
 
 void printPlayer(unsigned char player)
@@ -47,35 +29,58 @@ void clearPlayer(unsigned char player)
 	writeDataByte(' ');
 }
 
+
+
 unsigned char movePlayer(unsigned char player, unsigned char direction)
 {
+
 	switch (direction) {
 		//
 		// update player position based on direction of movement
 		//
-	case UP:
+	case UP:		//UP
+		if (0xc0<=player<=0xc7)
+			{
+				player = 0x80+(player&0x0f);
+				printPlayer(player);
+			}
+		break;
+
+	case DOWN:		//DOWN
+		if (0x80<=player<=0x87)
+			{
+				player = 0xC0+(player&0x0f);
+				didPlayerWin(player);
+				printPlayer(player);
+			}
+
+		break;
+
+	case LEFT:		//LEFT
+		if (player != 0xc0|0x80)
+				{
+					player = player--;
+					printPlayer(player);
+				}
+		if(player == 0xc0)
 		{
-			player |= ~BIT6;
+			player = 0x87;
+			printPlayer(player);
 		}
 		break;
 
-	case RIGHT:
-		if(player&0x0f<7)
-		{
-			player = 1 + player;
-		}
-		break;
-
-	case LEFT:
-		if(player&0x0f<0)
-		{
-			player = player - 1;
-		}
-		break;
-
-	case DOWN:
-		player |= BIT6;
-		break;
+	case RIGHT:		//RIGHT
+		if (player != 0xc7|0x87)
+			{
+				player = player++;
+				didPlayerWin(player);
+				printPlayer(player);
+			}
+		if (player == 0x87)
+				{
+					player = 0xc0;
+					printPlayer(player);
+				}
 
 	}
 
@@ -84,5 +89,14 @@ unsigned char movePlayer(unsigned char player, unsigned char direction)
 
 char didPlayerWin(unsigned char player)
 {
-	return player == 0xC7;
+	if (player == 0xC7)
+	{
+		clearPlayer(player);
+		cursorToLineOne();
+		writeString(you);
+		cursorToLineTwo();
+		writeString(won);
+	}
+
+	return player == 0xC8;
 }
