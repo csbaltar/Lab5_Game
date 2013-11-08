@@ -15,11 +15,12 @@
 
 #define NUM_MINES 2
 
+
+unsigned char gameOver(unsigned char  player);
 //
 // Initializes player to starting position on board.
 //
 unsigned char initPlayer();
-
 
 //
 // Prints the player marker (*) at the player location passed in.
@@ -39,7 +40,9 @@ unsigned char movePlayer(unsigned char player, unsigned char direction);
 //
 // Returns true if the position passed in is the winning game position.
 //
-char didPlayerWin(unsigned char player);
+unsigned char didPlayerWin(unsigned char player);
+
+void clearScreen();
 
 /*
  * Functions which may prove useful in achieving A-Functionality.

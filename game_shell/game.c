@@ -11,6 +11,16 @@ char won[]="Won!!";
 char game[]="Game";
 char over[]="Over!";
 char boom[]="boom";
+char clear[]="        ";
+
+void clearScreen()
+{
+	cursorToLineOne();
+	writeString(clear);
+	cursorToLineTwo();
+	writeString(clear);
+}
+
 
 unsigned char initPlayer()
 {
@@ -34,11 +44,14 @@ void clearPlayer(unsigned char player)
 unsigned char movePlayer(unsigned char player, unsigned char direction)
 {
 
+
 	switch (direction) {
 		//
 		// update player position based on direction of movement
 		//
 	case UP:		//UP
+		clearScreen();
+		clearPlayer(player);
 		if (0xc0<=player<=0xc7)
 			{
 				player = 0x80+(player&0x0f);
@@ -47,6 +60,8 @@ unsigned char movePlayer(unsigned char player, unsigned char direction)
 		break;
 
 	case DOWN:		//DOWN
+		clearScreen();
+		clearPlayer(player);
 		if (0x80<=player<=0x87)
 			{
 				player = 0xC0+(player&0x0f);
@@ -57,37 +72,42 @@ unsigned char movePlayer(unsigned char player, unsigned char direction)
 		break;
 
 	case LEFT:		//LEFT
-		if (player != 0xc0|0x80)
-				{
-					player = player--;
-					printPlayer(player);
-				}
+		clearScreen();
+		clearPlayer(player);
+
+		player = player-0x01;
+
 		if(player == 0xc0)
 		{
 			player = 0x87;
-			printPlayer(player);
 		}
+		if (player == 0x80)
+		{
+			player = 0x80;
+		}
+
+		printPlayer(player);
 		break;
 
 	case RIGHT:		//RIGHT
-		if (player != 0xc7|0x87)
-			{
-				player = player++;
-				didPlayerWin(player);
-				printPlayer(player);
-			}
+		clearScreen();
+		clearPlayer(player);
+
+		player = player + 0x01;
+		didPlayerWin(player);
+
 		if (player == 0x87)
 				{
-					player = 0xc0;
-					printPlayer(player);
+					player = 0xc0;\
 				}
+		printPlayer(player);
 
 	}
 
 	return player;
 }
 
-char didPlayerWin(unsigned char player)
+unsigned char didPlayerWin(unsigned char player)
 {
 	if (player == 0xC7)
 	{
@@ -98,5 +118,15 @@ char didPlayerWin(unsigned char player)
 		writeString(won);
 	}
 
-	return player == 0xC8;
+	return initPlayer();
+}
+
+unsigned char gameOver(unsigned char  player)
+{
+	clearPlayer(player);
+	cursorToLineOne();
+	writeString(game);
+	cursorToLineTwo();
+	writeString(over);
+	return initPlayer();
 }

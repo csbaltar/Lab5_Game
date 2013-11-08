@@ -3,16 +3,22 @@
 #include "buttons/button.h"
 #include "LCD/LCD.h"
 
-#define True = 0x1
-#define False = 0x0
+#define True = 0x01
+#define False = 0x00
 
 void init_timer();
 void init_buttons();
 
-char flag=0;
-char buttonPressed =0;
-
+char flag=0;	//timer interrupt flag
+char buttonPressed =0;	//button flag
+char count;
 unsigned char direction = (UP|DOWN|LEFT|RIGHT);
+
+void clearTimer()
+{
+	count=0;
+	TACTL |= TACLR;
+}
 
 int main(void)
 {
@@ -35,12 +41,24 @@ int main(void)
 	while(1)
 	{
 
-	    flag = 0;
-	    delayMilli();
+	    if (flag)
+		{
+			flag = 0;
+			count++;
 
-	    buttonPressed=0;
-	    delayMilli();
+	    	if (count>4)
+	    	{
+	    		player = gameOver(player);
+	    		clearTimer();
+	    	}
+	    }
 
+	    if(buttonPressed)
+	    {
+	    	buttonPressed=0;
+	    	clearTimer();
+	    	player = movePlayer(player, direction);
+	    }
 
 		/*
 		 * while (game is on)
@@ -86,7 +104,6 @@ __interrupt void Port_1_ISR(void)
 	        P1IFG &= ~BIT1;                            // clear flag
 	        direction = UP;
 	        buttonPressed=1;
-	        P1OUT ^= BIT6;                            // toggle LED 2
 	    }
 
 	if (P1IFG & BIT2)
@@ -94,7 +111,6 @@ __interrupt void Port_1_ISR(void)
 	        P1IFG &= ~BIT2;                         // clear flag
 	        direction=DOWN;
 	        buttonPressed =1;
-	        P1OUT ^= BIT0;                            // toggle LED 1
 	    }
 
 	if (P1IFG & BIT3)
@@ -102,15 +118,14 @@ __interrupt void Port_1_ISR(void)
 	        P1IFG &= ~BIT3;                         // clear P1.3 interrupt flag
 	        direction = LEFT;
 	        buttonPressed =1;
-	        P1OUT ^= BIT0|BIT6;                     // toggle both LEDs
 	    }
 	if(P1IFG & BIT4)
 		{
-			P1IFG &= ~BIT4;                         // clear P1.3 interrupt flag
+			P1IFG &= ~BIT4;                         // clear P1.4 interrupt flag
 			direction = RIGHT;
 	        buttonPressed =1;
-			P1OUT ^= BIT0|BIT6;                     // toggle both LEDs
 		}
+
 }
 
 
@@ -138,14 +153,7 @@ void init_buttons()
 	// do button initialization work
 	configureP1PinAsButton(BIT1|BIT2|BIT3|BIT4);
 
-	P1DIR &= ~(BIT1|BIT2|BIT3|BIT4);                // set buttons to input
-
-	P1IE |= BIT1|BIT2|BIT3|BIT4;                 // enable the interrupts
-	P1IES |= BIT1|BIT2|BIT3;                   // configure interrupt to sense falling edges
-
-	P1REN |= BIT1|BIT2|BIT3|BIT4;                   // enable internal pull-up/pull-down network
-	P1OUT |= BIT1|BIT2|BIT3|BIT4;                   // configure as pull-up
-
+	P1IES |= BIT1|BIT2|BIT3|BIT4;                   // configure interrupt to sense falling edges
 	P1IFG &= ~(BIT1|BIT2|BIT3|BIT4);                // clear flags
-
+	P1IE |= BIT1|BIT2|BIT3|BIT4;                 	// enable the interrupts
 }
