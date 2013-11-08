@@ -15,6 +15,11 @@
 
 #define NUM_MINES 2
 
+void testAndRespondToButtonPush(unsigned char buttonToTest);
+
+void movePlayerRespondToButtonPush(unsigned char buttonToTest);
+
+void clearTimer();
 
 unsigned char gameOver(unsigned char  player);
 //
@@ -43,6 +48,8 @@ unsigned char movePlayer(unsigned char player, unsigned char direction);
 unsigned char didPlayerWin(unsigned char player);
 
 void clearScreen();
+
+unsigned char youWon(unsigned char player);
 
 /*
  * Functions which may prove useful in achieving A-Functionality.

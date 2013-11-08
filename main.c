@@ -3,16 +3,16 @@
 #include "buttons/button.h"
 #include "LCD/LCD.h"
 
-#define True = 0x01
-#define False = 0x00
 
 void init_timer();
 void init_buttons();
 
-char flag=0;	//timer interrupt flag
-char buttonPressed =0;	//button flag
 char count;
 unsigned char direction = (UP|DOWN|LEFT|RIGHT);
+unsigned char buttonToTest = (UP|DOWN|LEFT|RIGHT);
+char flag=0;	//timer interrupt flag
+char buttonPressed =0;	//button flag
+
 
 void clearTimer()
 {
@@ -41,12 +41,12 @@ int main(void)
 	while(1)
 	{
 
-	    if (flag)
+		if (flag)
 		{
 			flag = 0;
 			count++;
 
-	    	if (count>4)
+	    	if (count>4)// & Winning == 0)
 	    	{
 	    		player = gameOver(player);
 	    		clearTimer();
@@ -56,9 +56,13 @@ int main(void)
 	    if(buttonPressed)
 	    {
 	    	buttonPressed=0;
+	    	//Winning = 0;
 	    	clearTimer();
 	    	player = movePlayer(player, direction);
+
+	    	didPlayerWin(player);
 	    }
+
 
 		/*
 		 * while (game is on)
