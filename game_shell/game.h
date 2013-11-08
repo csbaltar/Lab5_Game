@@ -15,8 +15,6 @@
 
 #define NUM_MINES 2
 
-void testAndRespondToButtonPush(unsigned char buttonToTest);
-
 void movePlayerRespondToButtonPush(unsigned char buttonToTest);
 
 void clearTimer();

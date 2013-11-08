@@ -51,7 +51,7 @@ unsigned char movePlayer(unsigned char player, unsigned char direction)
 		//
 		// update player position based on direction of movement
 		//
-	case UP:		//UP
+	case BIT1:		//UP
 		clearScreen();
 		clearPlayer(player);
 		if (player == 0xc7)
@@ -67,7 +67,7 @@ unsigned char movePlayer(unsigned char player, unsigned char direction)
 
 		break;
 
-	case DOWN:		//DOWN
+	case BIT2:		//DOWN
 
 		clearScreen();
 		clearPlayer(player);
@@ -86,7 +86,7 @@ unsigned char movePlayer(unsigned char player, unsigned char direction)
 
 		break;
 
-	case LEFT:		//LEFT
+	case BIT3:		//LEFT
 		clearScreen();
 		clearPlayer(player);
 
@@ -109,7 +109,7 @@ unsigned char movePlayer(unsigned char player, unsigned char direction)
 		printPlayer(player);
 		break;
 
-	case RIGHT:		//RIGHT
+	case BIT4:		//RIGHT
 		clearScreen();
 		clearPlayer(player);
 

@@ -98,11 +98,34 @@ __interrupt void TIMER0_A1_ISR()
     flag = 1;
 }
 
+void testAndRespondToButtonPush(char buttonToTest)
+{
+    if (buttonToTest & P1IFG)
+    {
+        if (buttonToTest & P1IES)
+        {
+        	buttonPressed = 1;
+        	direction = buttonToTest;
+        } else
+        {
+            debounce();
+        }
+
+        P1IES ^= buttonToTest;
+        P1IFG &= ~buttonToTest;
+    }
+}
+
 #pragma vector=PORT1_VECTOR
 __interrupt void Port_1_ISR(void)
 {
     // do some stuff in response to an interrupt
+testAndRespondToButtonPush(BIT1);
+testAndRespondToButtonPush(BIT2);
+testAndRespondToButtonPush(BIT3);
+testAndRespondToButtonPush(BIT4);
 
+/*
 	if (P1IFG & BIT1)
 	    {
 	        P1IFG &= ~BIT1;                            // clear flag
@@ -129,6 +152,7 @@ __interrupt void Port_1_ISR(void)
 			direction = RIGHT;
 	        buttonPressed =1;
 		}
+		*/
 
 }
 
