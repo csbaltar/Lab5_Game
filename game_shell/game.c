@@ -52,6 +52,7 @@ unsigned char movePlayer(unsigned char player, unsigned char direction)
 		// update player position based on direction of movement
 		//
 	case BIT1:		//UP
+
 		clearScreen();
 		clearPlayer(player);
 		if (player == 0xc7)
@@ -87,6 +88,7 @@ unsigned char movePlayer(unsigned char player, unsigned char direction)
 		break;
 
 	case BIT3:		//LEFT
+
 		clearScreen();
 		clearPlayer(player);
 
@@ -110,6 +112,7 @@ unsigned char movePlayer(unsigned char player, unsigned char direction)
 		break;
 
 	case BIT4:		//RIGHT
+
 		clearScreen();
 		clearPlayer(player);
 
@@ -145,8 +148,6 @@ unsigned char youWon(unsigned char player)
 	writeString(you);
 	cursorToLineTwo();
 	writeString(won);
-	delayMilli();
-
 
 	return initPlayer();
 }
@@ -155,7 +156,6 @@ unsigned char didPlayerWin(unsigned char player)
 {
 	if (player == 0xC7)
 	{
-
 		youWon(player);
 	}
 

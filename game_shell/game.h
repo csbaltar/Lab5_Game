@@ -41,14 +41,19 @@ void clearPlayer(unsigned char player);
 unsigned char movePlayer(unsigned char player, unsigned char direction);
 
 //
+//
+//
+unsigned char youWon(unsigned char player);
+
+//
+//Makes the screen blank
+//
+void clearScreen();
+
+//
 // Returns true if the position passed in is the winning game position.
 //
 unsigned char didPlayerWin(unsigned char player);
-
-void clearScreen();
-
-unsigned char youWon(unsigned char player);
-
 /*
  * Functions which may prove useful in achieving A-Functionality.
  * 
